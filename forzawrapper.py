@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 import requests 
 
-def big_dick_few_lines():
-    response = requests.get("https://forzafootball.com/en-GB/api/tournament/429").json()
-    matcher = response['matches']
-    data = [(m['kickoff_at'], m['home_team']['name']+" vs "+m['away_team']['name'], '-'.join([str(x) for x in m['score']['current']])) for m in matcher if m['status'] != 'before']
-    return pd.DataFrame(data, columns=["Kickoff", "Teams", "Score"]).sort_values("Kickoff")
+def get_qualifying():
+    response = requests.get("https://forzafootball.com/sv/api/tournament/429/tables").json()
+    qualifying = []
+    for group in response['tables']:
+        qualifying += [team['team']['name'] for team in group['rows']][:2]
+    return pd.DataFrame(qualifying)
+
 
 def get_scores():
     """
@@ -39,7 +41,7 @@ def get_scores():
 
 def main():
     print(get_scores())
-    print(big_dick_few_lines())
+    print(get_qualifying())
 
 if __name__ == "__main__":
     main()
