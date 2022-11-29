@@ -20,10 +20,12 @@ def get_scores():
     games = []
     scores = []
     times = []
+    groups = []
     for match in matcher:
         if match['status'] != 'before':
             home_team = match['home_team']['name']
             away_team = match['away_team']['name']
+            groups.append(match['series'])
             time = match['kickoff_at']
             #info[f'{home_team} vs {away_team}'] = match['score']['current'] #Tror om det blir samma lag(key) skrivs resultatet från den matchen över
             games.append(f'{home_team} vs {away_team}')
@@ -33,10 +35,11 @@ def get_scores():
             home_team = match['home_team']['name']
             away_team = match['away_team']['name']
             time = match['kickoff_at']
+            groups.append(match['series'])
             games.append(f'{home_team} vs {away_team}')
             scores.append(None)
             times.append(time)
-    return pd.DataFrame(list(zip(times, games, scores)), columns=["Kickoff", "Teams", "Score"]).sort_values("Kickoff").reset_index(drop=True)
+    return pd.DataFrame(list(zip(times, games, scores, groups)), columns=["Kickoff", "Teams", "Score", "Group"]).sort_values("Kickoff").reset_index(drop=True)
     #return pd.DataFrame(info)
 
 def main():
